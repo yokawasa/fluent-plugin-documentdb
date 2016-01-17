@@ -39,7 +39,7 @@ To use Microsoft Azure DocumentDB, you must create a DocumentDB database account
  * **docdb\_account\_key (required)** - Azure DocumentDB Account key (master key). You must NOT set a read-only key
  * **docdb\_database (required)** - DocumentDB database nameb
  * **docdb\_collection (required)** - DocumentDB collection name
- * **auto\_create\_database (optional** - Default:true. By default, DocumentDB database named **docdb\_database** will be automatically created if it does not exist
+ * **auto\_create\_database (optional)** - Default:true. By default, DocumentDB database named **docdb\_database** will be automatically created if it does not exist
  * **auto\_create\_collection (optional)** - Default:true. By default, DocumentDB collection named **docdb\_collection** will be automatically created if it does not exist
  * **localtime (optional)** - Default:false. By default, time record is inserted with UTC (Coordinated Universal Time). This option allows to use local time if you set localtime true
  * **time\_format (optional)** -  Default:%s. Time format for a time field to be inserted. Default format is %s, that is unix epoch time. If you want it to be more human readable, set this %Y%m%d-%H:%M:%S, for example.
@@ -114,7 +114,7 @@ An expected output record for sample input will be like this:
     $ rake build
     $ rake install:local
      
-    # funning fluentd with your fluent.conf
+    # running fluentd with your fluent.conf
     $ fluentd -c fluent.conf -vv &
      
     # send test apache requests for testing plugin ( only in the case that input source is apache access log )
