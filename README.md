@@ -25,6 +25,8 @@ To use Microsoft Azure DocumentDB, you must create a DocumentDB database account
         docdb_account_key DOCUMENTDB_ACCOUNT_KEY
         docdb_database  mydb
         docdb_collection mycollection
+        auto_create_database true
+        auto_create_collection true
         time_format %s
         localtime false
         add_time_field true
@@ -38,7 +40,7 @@ To use Microsoft Azure DocumentDB, you must create a DocumentDB database account
  * **docdb\_database (required)** - DocumentDB database nameb
  * **docdb\_collection (required)** - DocumentDB collection name
  * **auto\_create\_database** - Default:true. By default, DocumentDB database named **docdb\_database** will be automatically created if it does not exist
- * **auto\_create\_collectione** - Default:true. By default, DocumentDB database named **docdb\_collection** will be automatically created if it does not exist
+ * **auto\_create\_collectione** - Default:true. By default, DocumentDB collection named **docdb\_collection** will be automatically created if it does not exist
  * **localtime (optional)** - Default:false. By default, time record is inserted with UTC (Coordinated Universal Time). This option allows to use local time if you set localtime true
  * **time\_format (optional)** -  Default:%s. Time format for a time field to be inserted. Default format is %s, that is unix epoch time. If you want it to be more human readable, set this %Y%m%d-%H:%M:%S, for example.
  * **add\_time\_field (optional)** - Default:true. This option allows to insert a time field to record
