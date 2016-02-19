@@ -1,0 +1,8 @@
+Release 0.1.1 - 2016/02/20
+
+	* Security enhanced option: Added secret option to docdb_account_key
+
+Release 0.1.0 - 2016/01/19
+
+	* Inital Release
+	* Add out_documentdb
