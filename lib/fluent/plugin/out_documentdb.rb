@@ -13,7 +13,7 @@ module Fluent
     end
 
     config_param :docdb_endpoint, :string
-    config_param :docdb_account_key, :string
+    config_param :docdb_account_key, :string, :secret => true
     config_param :docdb_database, :string
     config_param :docdb_collection, :string
     config_param :auto_create_database, :bool, :default => true
