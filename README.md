@@ -20,7 +20,7 @@ To use Microsoft Azure DocumentDB, you must create a DocumentDB database account
 ### Fluentd - fluent.conf
   
     <match documentdb.*>
-        type documentdb
+        @type documentdb
         docdb_endpoint  DOCUMENTDB_ACCOUNT_ENDPOINT
         docdb_account_key DOCUMENTDB_ACCOUNT_KEY
         docdb_database  mydb
@@ -56,7 +56,7 @@ fluent-plugin-documentdb will add **id** attribute which is UUID format and any 
 <u>fluent.conf</u>
 
     <source>
-        type tail                          # input plugin
+        @type tail                          # input plugin
         path /var/log/apache2/access.log   # monitoring file
         pos_file /tmp/fluentd_pos_file     # position file
         format apache                      # format
@@ -64,6 +64,7 @@ fluent-plugin-documentdb will add **id** attribute which is UUID format and any 
     </source>
     
     <match documentdb.*>
+        @type documentdb
         docdb_endpoint https://yoichikademo.documents.azure.com:443/
         docdb_account_key Tl1xykQxnExUisJ+BXwbbaC8NtUqYVE9kUDXCNust5aYBduhui29Xtxz3DLP88PayjtgtnARc1PW+2wlA6jCJw==
         docdb_database mydb
