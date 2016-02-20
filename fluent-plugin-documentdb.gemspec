@@ -19,9 +19,9 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|gem|features)/})
   gem.require_paths = ["lib"]
 
+  gem.add_dependency "fluentd", [">= 0.10.58", "< 2"]
+  gem.add_dependency "azure-documentdb-sdk"
   gem.add_development_dependency "bundler", "~> 1.11"
   gem.add_development_dependency "rake", "~> 10.0"
   gem.add_development_dependency "test-unit"
-  gem.add_development_dependency "azure-documentdb-sdk"
-  gem.add_runtime_dependency "fluentd"
 end
