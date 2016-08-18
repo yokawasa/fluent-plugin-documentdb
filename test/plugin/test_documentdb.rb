@@ -6,12 +6,17 @@ class DocumentdbOutputTest < Test::Unit::TestCase
   end
 
   CONFIG = %[
-    docdb_endpoint DOCUMENTDB_ACCOUNT_ENDPOINT
-    docdb_account_key DOCUMENTDB_ACCOUNT_KEY
+    docdb_endpoint https://yoichikademo1.documents.azure.com:443
+    docdb_account_key EMwUa3EzsAtJ1qYfzwo9nQ3KudofsXNm3xLh1SLffKkUHMFl80OZRZIVu4lxdKRKxkgVAj0c2mv9BZSyMN7tdg==
     docdb_database mydb
     docdb_collection mycollection
-    localtime true
+    auto_create_database true
+    auto_create_collection true
+    partitioned_collection true
+    partition_key host
+    offer_throughput 10100
     time_format %Y%m%d-%H:%M:%S
+    localtime false
     add_time_field true
     time_field_name time
     add_tag_field true

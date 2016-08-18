@@ -1,3 +1,8 @@
+Release 0.2.0 - 2016/08/17
+
+	* Support Partitioned Collection mode
+	* No longer depend on azure-documentdb-sdk instead use very tiny documentdb client library that included in the plugin
+
 Release 0.1.2 - 2016/02/20
 	
 	* Change gem package dependency option for azure-documentdb-sdk from add_development_dependency to add_dependency
