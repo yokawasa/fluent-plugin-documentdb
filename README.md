@@ -116,7 +116,6 @@ fluent-plugin-documentdb will add **id** attribute which is UUID format and any 
         partitioned_collection true 
         partition_key host
         offer_throughput 10100
-        auto_create_database
         localtime true
         time_format %Y%m%d-%H:%M:%S
         add_time_field true
