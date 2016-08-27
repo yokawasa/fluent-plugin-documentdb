@@ -28,7 +28,7 @@ module Fluent
     config_param :partition_key, :string, :default => nil
     config_param :offer_throughput, :integer, :default => AzureDocumentDB::PARTITIONED_COLL_MIN_THROUGHPUT
     config_param :time_format, :string, :default => nil
-    config_param :localtime, :bool, default: false
+    config_param :localtime, :bool, :default => false
     config_param :add_time_field, :bool, :default => true
     config_param :time_field_name, :string, :default => 'time'
     config_param :add_tag_field, :bool, :default => false
