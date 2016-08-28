@@ -122,7 +122,7 @@ module Fluent
           if @partitioned_collection
             @client.create_document(@coll_resource, unique_doc_identifier, record, @partition_key)
           else
-            @client.create_document(@coll_resource, unique_doc_identifier, record, @partition_key)
+            @client.create_document(@coll_resource, unique_doc_identifier, record)
           end
         rescue RestClient::ExceptionWithResponse => rcex
           exdict = JSON.parse(rcex.response)
