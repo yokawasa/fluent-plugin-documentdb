@@ -127,7 +127,7 @@ module Fluent
         rescue RestClient::ExceptionWithResponse => rcex
           exdict = JSON.parse(rcex.response)
           if exdict['code'] == 'Conflict'
-            $log.fatal "Duplicate Error: document #{unique_document_identifier} already exists, data=>" + record.to_json
+            $log.fatal "Duplicate Error: document #{unique_doc_identifier} already exists, data=>" + record.to_json
           else
             $log.fatal "RestClient Error: '#{rcex.response}', data=>" + record.to_json
           end
