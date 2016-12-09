@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Fluent-plugin-documentdb by yokawasa</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Fluent-plugin-documentdb</h1>
+          <h2>Azure DocumentDB output plugin for Fluentd</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/yokawasa/fluent-plugin-documentdb/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/yokawasa/fluent-plugin-documentdb/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/yokawasa/fluent-plugin-documentdb" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a id="azure-documentdb-output-plugin-for-fluentd" class="anchor" href="#azure-documentdb-output-plugin-for-fluentd" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Azure DocumentDB output plugin for Fluentd</h1>
+
+<p>fluent-plugin-documentdb is a fluent plugin to output to Azure DocumentDB</p>
+
+<p><img src="https://github.com/yokawasa/fluent-plugin-documentdb/raw/master/img/fluentd-azure-documentdb-collection.png" alt="fluent-plugin-documentdb overview"></p>
+
+<p>[NEWS] From fluent-plugin-documentdb-0.2.0, it supports partitioned collections, not only single-partition collections (See <a href="https://azure.microsoft.com/en-us/documentation/articles/documentdb-partition-data/#single-partition-and-partitioned-collections">Partitioning and scaling in Azure DocumentDB</a> for partitioned collections and single-partition collection ).</p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
+
+<pre><code>$ gem install fluent-plugin-documentdb
+</code></pre>
+
+<h2>
+<a id="configuration" class="anchor" href="#configuration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configuration</h2>
+
+<h3>
+<a id="documentdb" class="anchor" href="#documentdb" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>DocumentDB</h3>
+
+<p>To use Microsoft Azure DocumentDB, you must create a DocumentDB database account using either the Azure portal, Azure Resource Manager templates, or Azure command-line interface (CLI). In addition, you must have a database and a collection to which fluent-plugin-documentdb writes event-stream out. Here are instructions:</p>
+
+<ul>
+<li>Create a DocumentDB database account using <a href="https://azure.microsoft.com/en-us/documentation/articles/documentdb-create-account/">the Azure portal</a>, or <a href="https://azure.microsoft.com/en-us/documentation/articles/documentdb-automation-resource-manager-cli/">Azure Resource Manager templates and Azure CLI</a>
+</li>
+<li><a href="https://azure.microsoft.com/en-us/documentation/articles/documentdb-create-database/">How to create a database for DocumentDB</a></li>
+<li><a href="https://azure.microsoft.com/en-us/documentation/articles/documentdb-create-collection/">Create a DocumentDB collection</a></li>
+<li><a href="https://azure.microsoft.com/en-us/documentation/articles/documentdb-partition-data/">Partitioning and scaling in Azure DocumentDB</a></li>
+</ul>
+
+<h3>
+<a id="fluentd---fluentconf" class="anchor" href="#fluentd---fluentconf" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Fluentd - fluent.conf</h3>
+
+<pre><code>&lt;match documentdb.*&gt;
+    @type documentdb
+    docdb_endpoint  DOCUMENTDB_ACCOUNT_ENDPOINT
+    docdb_account_key DOCUMENTDB_ACCOUNT_KEY
+    docdb_database  mydb
+    docdb_collection mycollection
+    auto_create_database true
+    auto_create_collection true
+    partitioned_collection true 
+    partition_key PARTITION_EKY
+    offer_throughput 10100
+    time_format %s
+    localtime false
+    add_time_field true
+    time_field_name time
+    add_tag_field true
+    tag_field_name time
+&lt;/match&gt;
+</code></pre>
+
+<ul>
+<li>
+<strong>docdb_endpoint (required)</strong> - Azure DocumentDB Account endpoint URI</li>
+<li>
+<strong>docdb_account_key (required)</strong> - Azure DocumentDB Account key (master key). You must NOT set a read-only key</li>
+<li>
+<strong>docdb_database (required)</strong> - DocumentDB database nameb</li>
+<li>
+<strong>docdb_collection (required)</strong> - DocumentDB collection name</li>
+<li>
+<strong>auto_create_database (optional)</strong> - Default:true. By default, DocumentDB database named <strong>docdb_database</strong> will be automatically created if it does not exist</li>
+<li>
+<strong>auto_create_collection (optional)</strong> - Default:true. By default, DocumentDB collection named <strong>docdb_collection</strong> will be automatically created if it does not exist</li>
+<li>
+<strong>partitioned_collection (optional)</strong> - Default:false. Set true if you want to create and/or store records to partitioned collection. Set false for single-partition collection</li>
+<li>
+<strong>partition_key (optional)</strong> - Default:nil. Partition key must be specified for paritioned collection (partitioned_collection set to be true)</li>
+<li>
+<strong>offer_throughput (optional)</strong> - Default:10100. Throughput for the collection expressed in units of 100 request units per second. This is only effective when you newly create a partitioned collection (ie. Both auto_create_collection and partitioned_collection are set to be true )</li>
+<li>
+<strong>localtime (optional)</strong> - Default:false. By default, time record is inserted with UTC (Coordinated Universal Time). This option allows to use local time if you set localtime true</li>
+<li>
+<strong>time_format (optional)</strong> -  Default:%s. Time format for a time field to be inserted. Default format is %s, that is unix epoch time. If you want it to be more human readable, set this %Y%m%d-%H:%M:%S, for example.</li>
+<li>
+<strong>add_time_field (optional)</strong> - Default:true. This option allows to insert a time field to record</li>
+<li>
+<strong>time_field_name (optional)</strong> - Default:time. Time field name to be inserted</li>
+<li>
+<strong>add_tag_field (optional)</strong> - Default:true. This option allows to insert a tag field to record</li>
+<li>
+<strong>tag_field_name (optional)</strong> - Default:tag. Tag field name to be inserted</li>
+</ul>
+
+<h2>
+<a id="configuration-examples" class="anchor" href="#configuration-examples" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configuration examples</h2>
+
+<p>fluent-plugin-documentdb will add <strong>id</strong> attribute which is UUID format and any other attributes of record automatically. In addition, it will add <strong>time</strong> and <strong>tag</strong> attributes if <strong>add_time_field</strong> and <strong>add_tag_field</strong> are true respectively. Please see 2 types of the plugin configurations example below - single-parition collection and partitioned collection. Source for fluentd to read is apache access log.</p>
+
+<h3>
+<a id="1-single-partition-collection-case" class="anchor" href="#1-single-partition-collection-case" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>(1) Single-Partition Collection Case</h3>
+
+<p>fluent.conf</p>
+
+<pre><code>&lt;source&gt;
+    @type tail                          # input plugin
+    path /var/log/apache2/access.log   # monitoring file
+    pos_file /tmp/fluentd_pos_file     # position file
+    format apache                      # format
+    tag documentdb.access              # tag
+&lt;/source&gt;
+
+&lt;match documentdb.*&gt;
+    @type documentdb
+    docdb_endpoint https://yoichikademo.documents.azure.com:443/
+    docdb_account_key Tl1xykQxnExUisJ+BXwbbaC8NtUqYVE9kUDXCNust5aYBduhui29Xtxz3DLP88PayjtgtnARc1PW+2wlA6jCJw==
+    docdb_database mydb
+    docdb_collection my-single-partition-collection
+    auto_create_database true
+    auto_create_collection true
+    partitioned_collection true 
+    localtime true
+    time_format %Y%m%d-%H:%M:%S
+    add_time_field true
+    time_field_name time
+    add_tag_field true
+    tag_field_name tag
+&lt;/match&gt;
+</code></pre>
+
+<h3>
+<a id="2-partitioned-collection-case" class="anchor" href="#2-partitioned-collection-case" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>(2) Partitioned Collection Case</h3>
+
+<p>fluent.conf</p>
+
+<pre><code>&lt;source&gt;
+    @type tail                          # input plugin
+    path /var/log/apache2/access.log   # monitoring file
+    pos_file /tmp/fluentd_pos_file     # position file
+    format apache                      # format
+    tag documentdb.access              # tag
+&lt;/source&gt;
+
+&lt;match documentdb.*&gt;
+    @type documentdb
+    docdb_endpoint https://yoichikademo.documents.azure.com:443/
+    docdb_account_key Tl1xykQxnExUisJ+BXwbbaC8NtUqYVE9kUDXCNust5aYBduhui29Xtxz3DLP88PayjtgtnARc1PW+2wlA6jCJw==
+    docdb_database mydb
+    docdb_collection my-partitioned-collection
+    auto_create_database true
+    auto_create_collection true
+    partitioned_collection true 
+    partition_key host
+    offer_throughput 10100
+    localtime true
+    time_format %Y%m%d-%H:%M:%S
+    add_time_field true
+    time_field_name time
+    add_tag_field true
+    tag_field_name tag
+&lt;/match&gt;
+</code></pre>
+
+<h2>
+<a id="sample-inputs-and-expected-records" class="anchor" href="#sample-inputs-and-expected-records" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Sample inputs and expected records</h2>
+
+<p>An expected output record for sample input will be like this:</p>
+
+<p>Sample Input (apache access log)</p>
+
+<pre><code>125.212.152.166 - - [17/Jan/2016:05:03:25 +0000] "GET /foo/bar/test.html HTTP/1.1" 304 179 "-" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36"
+</code></pre>
+
+<p>Output Record</p>
+
+<pre><code>{
+    id :  d2b2ece8-b948-41ae-a894-0ed1266e242a,
+    host :  125.211.152.166,
+    user :  -,
+    method :  GET,
+    path :  /foo/bar/test.html,
+    code :  304,
+    size :  179,
+    referer :  -,
+    agent :  Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36,
+    time :  20160117-05:03:25,
+    tag :  documentdb.access
+}  
+</code></pre>
+
+<h2>
+<a id="tests" class="anchor" href="#tests" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Tests</h2>
+
+<h3>
+<a id="running-test-code" class="anchor" href="#running-test-code" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Running test code</h3>
+
+<pre><code>$ git clone https://github.com/yokawasa/fluent-plugin-documentdb.git
+$ cd fluent-plugin-documentdb
+
+# edit CONFIG params of test/plugin/test_documentdb.rb 
+$ vi test/plugin/test_documentdb.rb
+
+# run test 
+$ rake test
+</code></pre>
+
+<h3>
+<a id="creating-package-running-and-testing-locally" class="anchor" href="#creating-package-running-and-testing-locally" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Creating package, running and testing locally</h3>
+
+<pre><code>$ rake build
+$ rake install:local
+
+# running fluentd with your fluent.conf
+$ fluentd -c fluent.conf -vv &amp;
+
+# send test apache requests for testing plugin ( only in the case that input source is apache access log )
+$ ab -n 5 -c 2 http://localhost/foo/bar/test.html
+</code></pre>
+
+<h2>
+<a id="todos" class="anchor" href="#todos" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>TODOs</h2>
+
+<ul>
+<li>Support automatic data expiration with TTL (Time-to-Live ). See <a href="https://azure.microsoft.com/en-us/documentation/articles/documentdb-time-to-live/">Expire data in DocumentDB collections automatically with time to live</a>
+</li>
+</ul>
+
+<h2>
+<a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contributing</h2>
+
+<p>Bug reports and pull requests are welcome on GitHub at <a href="https://github.com/yokawasa/fluent-plugin-documentdb">https://github.com/yokawasa/fluent-plugin-documentdb</a>.</p>
+
+<h2>
+<a id="copyright" class="anchor" href="#copyright" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Copyright</h2>
+
+<table>
+  <tr>
+    <td>Copyright</td>
+<td>Copyright (c) 2016- Yoichi Kawasaki</td>
+  </tr>
+  <tr>
+    <td>License</td>
+<td>Apache License, Version 2.0</td>
+  </tr>
+</table>
+        </section>
+
+        <footer>
+          Fluent-plugin-documentdb is maintained by <a href="https://github.com/yokawasa">yokawasa</a><br>
+          This page was generated by <a href="https://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
