@@ -174,6 +174,17 @@ An expected output record for sample input will be like this:
 ## TODOs
  * Support automatic data expiration with TTL (Time-to-Live ). See [Expire data in DocumentDB collections automatically with time to live](https://azure.microsoft.com/en-us/documentation/articles/documentdb-time-to-live/)
 
+
+## Change log
+* [Changelog](ChangeLog.md)
+
+## Links
+
+* http://yokawasa.github.io/fluent-plugin-documentdb
+* https://rubygems.org/gems/fluent-plugin-documentdb
+* http://unofficialism.info/posts/fluent-plugin-azurefunctions/
+
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/yokawasa/fluent-plugin-documentdb.
