@@ -182,8 +182,8 @@ An expected output record for sample input will be like this:
 
 * http://yokawasa.github.io/fluent-plugin-documentdb
 * https://rubygems.org/gems/fluent-plugin-documentdb
-* http://unofficialism.info/posts/fluent-plugin-azurefunctions/
-
+* [Collecting logs into Azure DocumentDB using fluent-plugin-documentdb](http://unofficialism.info/posts/collecting-logs-into-azure-documentdb-using-fluent-plugin-documentdb/)
+* [fluent-plugin-documentdb supports Partitioned collections](http://unofficialism.info/posts/fluent-plugin-documentdb-supports-partitioned-collections/)
 
 ## Contributing
 
