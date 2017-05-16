@@ -7,6 +7,10 @@ module Fluent
   class DocumentdbOutput < BufferedOutput
     Plugin.register_output('documentdb', self)
 
+    unless method_defined?(:log)
+      define_method('log') { $log }
+    end
+
     def initialize
       super
       require 'msgpack'
@@ -94,7 +98,7 @@ module Fluent
         @coll_resource = @client.get_collection_resource(database_resource, @docdb_collection)
 
       rescue Exception =>ex
-        $log.fatal "Error: '#{ex}'"
+        log.fatal "Error: '#{ex}'"
         exit!
       end
     end
@@ -127,12 +131,12 @@ module Fluent
         rescue RestClient::ExceptionWithResponse => rcex
           exdict = JSON.parse(rcex.response)
           if exdict['code'] == 'Conflict'
-            $log.fatal "Duplicate Error: document #{unique_doc_identifier} already exists, data=>" + record.to_json
+            log.fatal "Duplicate Error: document #{unique_doc_identifier} already exists, data=>" + record.to_json
           else
-            $log.fatal "RestClient Error: '#{rcex.response}', data=>" + record.to_json
+            log.fatal "RestClient Error: '#{rcex.response}', data=>" + record.to_json
           end
         rescue => ex
-          $log.fatal "UnknownError: '#{ex}', uniqueid=>#{unique_doc_identifier}, data=>" + record.to_json
+          log.fatal "UnknownError: '#{ex}', uniqueid=>#{unique_doc_identifier}, data=>" + record.to_json
         end
       }
     end
