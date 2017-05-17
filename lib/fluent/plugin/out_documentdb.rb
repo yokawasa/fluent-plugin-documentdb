@@ -11,10 +11,6 @@ module Fluent::Plugin
 
     DEFAULT_BUFFER_TYPE = "memory"
 
-    unless method_defined?(:log)
-      define_method('log') { $log }
-    end
-
     def initialize
       super
       require 'msgpack'
