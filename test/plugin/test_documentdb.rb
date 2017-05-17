@@ -28,41 +28,52 @@ class DocumentdbOutputTest < Test::Unit::TestCase
   #   utc
   # ]
 
-  def create_driver(conf = CONFIG, tag='documentdb.test')
-    Fluent::Test::BufferedOutputTestDriver.new(Fluent::DocumentdbOutput, tag).configure(conf)
+  def create_driver(conf = CONFIG)
+    Fluent::Test::Driver::Output.new(Fluent::Plugin::DocumentdbOutput).configure(conf)
   end
 
   def test_configure
-    #### set configurations
-    # d = create_driver %[
-    #   path test_path
-    #   compress gz
-    # ]
-    #### check configurations
-    # assert_equal 'test_path', d.instance.path
-    # assert_equal :gz, d.instance.compress
+    d = create_driver
+
+    assert_equal 'https://yoichikademo1.documents.azure.com:443', d.instance.docdb_endpoint
+    assert_equal 'EMwUa3EzsAtJ1qYfzwo9nQ3KudofsXNm3xLh1SLffKkUHMFl80OZRZIVu4lxdKRKxkgVAj0c2mv9BZSyMN7tdg==',
+                 d.instance.docdb_account_key
+    assert_equal 'mydb', d.instance.docdb_database
+    assert_equal 'mycollection', d.instance.docdb_collection
+    assert_true d.instance.auto_create_database
+    assert_true d.instance.auto_create_collection
+    assert_equal 'host', d.instance.partition_key
+    assert_equal 10100, d.instance.offer_throughput
+    assert_equal '%Y%m%d-%H:%M:%S', d.instance.time_format
+    assert_false d.instance.localtime
+    assert_true d.instance.add_time_field
+    assert_equal 'time', d.instance.time_field_name
+    assert_true d.instance.add_tag_field
+    assert_equal 'tag', d.instance.tag_field_name
+
   end
 
   def test_format
     d = create_driver
 
-    # time = Time.parse("2011-01-02 13:14:15 UTC").to_i
-    # d.emit({"a"=>1}, time)
-    # d.emit({"a"=>2}, time)
+    time = Time.parse("2011-01-02 13:14:15 UTC").to_i
+    d.run(default_tag: 'documentdb.test') do
+      d.feed(time, {"a"=>1})
+      d.feed(time, {"a"=>2})
+    end
 
-    # d.expect_format %[2011-01-02T13:14:15Z\ttest\t{"a":1}\n]
-    # d.expect_format %[2011-01-02T13:14:15Z\ttest\t{"a":2}\n]
-
-    # d.run
+    # assert_equal EXPECTED1, d.formatted[0]
+    # assert_equal EXPECTED2, d.formatted[1]
   end
 
   def test_write
     d = create_driver
 
     time = Time.parse("2011-01-02 13:14:15 UTC").to_i
-    d.emit({"a"=>1}, time)
-    d.emit({"a"=>2}, time)
-    data = d.run
+    data = d.run(default_tag: 'documentdb.test') do
+      d.feed(time, {"a"=>1})
+      d.feed(time, {"a"=>2})
+    end
     puts data
     # ### FileOutput#write returns path
     # path = d.run
@@ -70,4 +81,3 @@ class DocumentdbOutputTest < Test::Unit::TestCase
     # assert_equal expect_path, path
   end
 end
-

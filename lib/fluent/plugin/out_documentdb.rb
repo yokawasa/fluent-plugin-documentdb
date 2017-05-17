@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
-
-module Fluent
+require 'fluent/plugin/output'
+module Fluent::Plugin
 
   require 'fluent/plugin/documentdb/constants'
 
-  class DocumentdbOutput < BufferedOutput
-    Plugin.register_output('documentdb', self)
+  class DocumentdbOutput < Output
+    Fluent::Plugin.register_output('documentdb', self)
+
+    helpers :compat_parameters
+
+    DEFAULT_BUFFER_TYPE = "memory"
 
     unless method_defined?(:log)
       define_method('log') { $log }
@@ -38,7 +42,13 @@ module Fluent
     config_param :add_tag_field, :bool, :default => false
     config_param :tag_field_name, :string, :default => 'tag'
 
+    config_section :buffer do
+      config_set_default :@type, DEFAULT_BUFFER_TYPE
+      config_set_default :chunk_keys, ['tag']
+    end
+
     def configure(conf)
+      compat_parameters_convert(conf, :buffer)
       super
       raise ConfigError, 'no docdb_endpoint' if @docdb_endpoint.empty?
       raise ConfigError, 'no docdb_account_key' if @docdb_account_key.empty?
@@ -55,10 +65,11 @@ module Fluent
         if (@auto_create_collection &&
               @offer_throughput < AzureDocumentDB::PARTITIONED_COLL_MIN_THROUGHPUT)
           raise ConfigError, sprintf("offer_throughput must be more than and equals to %s",
-                                 AzureDocumentDB::PARTITIONED_COLL_MIN_THROUGHPUT) 
+                                 AzureDocumentDB::PARTITIONED_COLL_MIN_THROUGHPUT)
         end
       end
-      @timef = TimeFormatter.new(@time_format, @localtime)
+      raise Fluent::ConfigError, "'tag' in chunk_keys is required." if not @chunk_key_tag
+      @timef = Fluent::TimeFormatter.new(@time_format, @localtime)
     end
 
     def start
@@ -76,7 +87,7 @@ module Fluent
         ## initial operations for database
         res = @client.find_databases_by_name(@docdb_database)
         if( res[:body]["_count"].to_i == 0 )
-          raise "No database (#{docdb_database}) exists! Enable auto_create_database or create it by useself" if !@auto_create_database 
+          raise "No database (#{docdb_database}) exists! Enable auto_create_database or create it by useself" if !@auto_create_database
           # create new database as it doesn't exists
           @client.create_database(@docdb_database)
         end
@@ -115,8 +126,16 @@ module Fluent
       end
       if @add_tag_field
         record[@tag_field_name] = tag
-      end 
+      end
       record.to_msgpack
+    end
+
+    def formatted_to_msgpack_binary?
+      true
+    end
+
+    def multi_workers_ready?
+      true
     end
 
     def write(chunk)
