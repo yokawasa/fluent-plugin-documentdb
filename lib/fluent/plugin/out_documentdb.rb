@@ -1,8 +1,15 @@
 # -*- coding: utf-8 -*-
 require 'fluent/plugin/output'
-module Fluent::Plugin
+require 'msgpack'
+require 'time'
+require 'securerandom'
+require 'fluent/plugin/documentdb/client'
+require 'fluent/plugin/documentdb/partitioned_coll_client'
+require 'fluent/plugin/documentdb/header'
+require 'fluent/plugin/documentdb/resource'
+require 'fluent/plugin/documentdb/constants'
 
-  require 'fluent/plugin/documentdb/constants'
+module Fluent::Plugin
 
   class DocumentdbOutput < Output
     Fluent::Plugin.register_output('documentdb', self)
@@ -13,13 +20,6 @@ module Fluent::Plugin
 
     def initialize
       super
-      require 'msgpack'
-      require 'time'
-      require 'securerandom'
-      require 'fluent/plugin/documentdb/client'
-      require 'fluent/plugin/documentdb/partitioned_coll_client'
-      require 'fluent/plugin/documentdb/header'
-      require 'fluent/plugin/documentdb/resource'
     end
 
     config_param :docdb_endpoint, :string
