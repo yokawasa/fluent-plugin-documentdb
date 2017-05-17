@@ -18,10 +18,6 @@ module Fluent::Plugin
 
     DEFAULT_BUFFER_TYPE = "memory"
 
-    def initialize
-      super
-    end
-
     config_param :docdb_endpoint, :string
     config_param :docdb_account_key, :string, :secret => true
     config_param :docdb_database, :string
