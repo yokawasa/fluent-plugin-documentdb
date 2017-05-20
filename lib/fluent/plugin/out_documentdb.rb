@@ -42,21 +42,21 @@ module Fluent::Plugin
     def configure(conf)
       compat_parameters_convert(conf, :buffer)
       super
-      raise ConfigError, 'no docdb_endpoint' if @docdb_endpoint.empty?
-      raise ConfigError, 'no docdb_account_key' if @docdb_account_key.empty?
-      raise ConfigError, 'no docdb_database' if @docdb_database.empty?
-      raise ConfigError, 'no docdb_collection' if @docdb_collection.empty?
+      raise Fluent::ConfigError, 'no docdb_endpoint' if @docdb_endpoint.empty?
+      raise Fluent::ConfigError, 'no docdb_account_key' if @docdb_account_key.empty?
+      raise Fluent::ConfigError, 'no docdb_database' if @docdb_database.empty?
+      raise Fluent::ConfigError, 'no docdb_collection' if @docdb_collection.empty?
       if @add_time_field and @time_field_name.empty?
-        raise ConfigError, 'time_field_name must be set if add_time_field is true'
+        raise Fluent::ConfigError, 'time_field_name must be set if add_time_field is true'
       end
       if @add_tag_field and @tag_field_name.empty?
-        raise ConfigError, 'tag_field_name must be set if add_tag_field is true'
+        raise Fluent::ConfigError, 'tag_field_name must be set if add_tag_field is true'
       end
       if @partitioned_collection
-        raise ConfigError, 'partition_key must be set in partitioned collection mode' if @partition_key.empty?
+        raise Fluent::ConfigError, 'partition_key must be set in partitioned collection mode' if @partition_key.empty?
         if (@auto_create_collection &&
               @offer_throughput < AzureDocumentDB::PARTITIONED_COLL_MIN_THROUGHPUT)
-          raise ConfigError, sprintf("offer_throughput must be more than and equals to %s",
+          raise Fluent::ConfigError, sprintf("offer_throughput must be more than and equals to %s",
                                  AzureDocumentDB::PARTITIONED_COLL_MIN_THROUGHPUT)
         end
       end
