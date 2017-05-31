@@ -23,6 +23,7 @@ unless ENV.has_key?('VERBOSE')
   $log = nulllogger
 end
 
+require 'fluent/test/driver/output'
 require 'fluent/plugin/out_documentdb'
 
 class Test::Unit::TestCase
