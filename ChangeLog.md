@@ -1,3 +1,9 @@
+## 0.3.0
+
+* Migrate to use fluentd v0.14 API - [PR#4](https://github.com/yokawasa/fluent-plugin-documentdb/pull/4)
+* Support plugin specific log level - [PR#3](https://github.com/yokawasa/fluent-plugin-documentdb/pull/3) 
+
+
 ## 0.2.1
 
 * Fixup bug on Single-Collection mode

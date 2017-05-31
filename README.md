@@ -26,6 +26,7 @@ To use Microsoft Azure DocumentDB, you must create a DocumentDB database account
   
     <match documentdb.*>
         @type documentdb
+        @log_level info
         docdb_endpoint  DOCUMENTDB_ACCOUNT_ENDPOINT
         docdb_account_key DOCUMENTDB_ACCOUNT_KEY
         docdb_database  mydb
@@ -59,6 +60,7 @@ To use Microsoft Azure DocumentDB, you must create a DocumentDB database account
  * **add\_tag\_field (optional)** - Default:true. This option allows to insert a tag field to record
  * **tag\_field\_name (optional)** - Default:tag. Tag field name to be inserted
 
+[note] @log_level is a fluentd built-in parameter (optional) that controls verbosity of logging: fatal|error|warn|info|debug|trace (See also [Logging of Fluentd](http://docs.fluentd.org/articles/logging#log-level))
 
 ## Configuration examples
 
