@@ -6,6 +6,14 @@ fluent-plugin-documentdb is a fluent plugin to output to Azure DocumentDB
 
 [NEWS] From fluent-plugin-documentdb-0.2.0, it supports partitioned collections, not only single-partition collections (See [Partitioning and scaling in Azure DocumentDB](https://azure.microsoft.com/en-us/documentation/articles/documentdb-partition-data/#single-partition-and-partitioned-collections) for partitioned collections and single-partition collection ).
 
+
+## Requirements
+
+| fluent-plugin-documentdb | fluentd | ruby |
+|------------------------|---------|------|
+| >= 0.3.0 | >= v0.14.15 | >= 2.1 |
+|  < 0.3.0 | >= v0.12.0 | >= 1.9 |
+
 ## Installation
 
     $ gem install fluent-plugin-documentdb
