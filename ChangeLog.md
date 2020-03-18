@@ -1,3 +1,7 @@
+
+## 0.3.1
+* fix CVE-2020-8130 - [issue #6](https://github.com/yokawasa/fluent-plugin-documentdb/issues/6)
+
 ## 0.3.0
 
 * Migrate to use fluentd v0.14 API - [PR#4](https://github.com/yokawasa/fluent-plugin-documentdb/pull/4)
