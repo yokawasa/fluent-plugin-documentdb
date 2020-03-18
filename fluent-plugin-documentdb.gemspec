@@ -20,7 +20,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "fluentd", [">= 0.14.15", "< 2"]
   gem.add_dependency "rest-client"
-  gem.add_development_dependency "bundler", "~> 1.11"
+  gem.add_development_dependency "bundler", ">= 1.15"
   gem.add_development_dependency "rake", ">= 12.3.3"
   gem.add_development_dependency "test-unit"
 end
